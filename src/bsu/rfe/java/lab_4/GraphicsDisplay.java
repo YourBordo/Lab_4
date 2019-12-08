@@ -166,33 +166,63 @@ public class GraphicsDisplay extends JPanel {
         canvas.setColor(Color.BLACK);
         canvas.setPaint(Color.BLACK);
 
+        double x = graphicsData[0][0];
+        double X = graphicsData[graphicsData.length-1][0];
+        double y = graphicsData[0][1];;
+        double Y = graphicsData[graphicsData.length-1][1];
+        for(int j = 1; j <graphicsData.length-1; ++j)
+        {
+            if(graphicsData[j][1] < y) y = graphicsData[j][1];
+            if(graphicsData[j][0] < x) x = graphicsData[j][0];
+            if(graphicsData[j][1] > Y) Y = graphicsData[j][1];
+            if(graphicsData[j][0] > X) y = graphicsData[j][0];
+        }
+
+
 
         for (Double temp = minX; temp < maxX; temp += step_x){
+
             if (i % 5 == 0){
                 canvas.draw(new Line2D.Double(xyToPoint(temp, step_y), xyToPoint(temp, -step_y)));
             }
             else{
                 canvas.draw(new Line2D.Double(xyToPoint(temp, step_y/2), xyToPoint(temp, -step_y/2)));
             }
+            if(temp <= (int)(X+x)/2 + step_x/2 && temp >= (int)(X+x)/2 - step_x/2 ){
+                canvas.setColor(Color.RED);
+                canvas.setPaint(Color.RED);
+                canvas.draw(new Line2D.Double(xyToPoint(temp, step_y*2), xyToPoint(temp, -step_y*2)));
+                canvas.setColor(Color.BLACK);
+                canvas.setPaint(Color.BLACK);
+            }
+
             i++;
 
         }
         i = 0;
         for (Double temp = minY; temp < maxY; temp += step_y){
-            if (i % 5 == 0){
+                if (i % 5 == 0){
                 canvas.draw(new Line2D.Double(xyToPoint(step_x, temp), xyToPoint(-step_x, temp)));
             }
             else{
                 canvas.draw(new Line2D.Double(xyToPoint(step_x/2, temp), xyToPoint(-step_x/2, temp)));
             }
+            if(temp <= (int)(Y+y)/2 + step_x/4 && temp >= (int)(Y+y)/2 - step_x/4 ){
+                canvas.setColor(Color.RED);
+                canvas.setPaint(Color.RED);
+                canvas.draw(new Line2D.Double(xyToPoint(step_x*2, temp), xyToPoint(-step_x*2, temp)));
+                canvas.setColor(Color.BLACK);
+                canvas.setPaint(Color.BLACK);
+            }
+
             i++;
 
         }
-        canvas.setColor(Color.RED);
+        /*canvas.setColor(Color.RED);
         canvas.setPaint(Color.RED);
-     //   canvas.draw(new Line2D.Double(xyToPoint(maxX-minX , step_y*2), xyToPoint(temp, -step_y*2)));
-     //   canvas.draw(new Line2D.Double(xyToPoint(step_x*2, temp), xyToPoint(-step_x*2, temp)));
-
+        canvas.draw(new Line2D.Double(xyToPoint(2, scaleY), xyToPoint(-2, scaleY)));
+        canvas.draw(new Line2D.Double(xyToPoint(scaleX , 4), xyToPoint(scaleX, -4)));
+*/
 
     }
 
