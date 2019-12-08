@@ -6,6 +6,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.*;
 
 
+
 public class GraphicsDisplay extends JPanel {
 
     private Double[][] graphicsData;
@@ -191,7 +192,7 @@ public class GraphicsDisplay extends JPanel {
             if(temp <= (int)(X+x)/2 + step_x/2 && temp >= (int)(X+x)/2 - step_x/2 ){
                 canvas.setColor(Color.RED);
                 canvas.setPaint(Color.RED);
-                canvas.draw(new Line2D.Double(xyToPoint(temp, step_y*2), xyToPoint(temp, -step_y*2)));
+                canvas.draw(new Line2D.Double(xyToPoint(temp, step_y), xyToPoint(temp, -step_y)));
                 canvas.setColor(Color.BLACK);
                 canvas.setPaint(Color.BLACK);
             }
@@ -210,20 +211,15 @@ public class GraphicsDisplay extends JPanel {
             if(temp <= (int)(Y+y)/2 + step_x/4 && temp >= (int)(Y+y)/2 - step_x/4 ){
                 canvas.setColor(Color.RED);
                 canvas.setPaint(Color.RED);
-                canvas.draw(new Line2D.Double(xyToPoint(step_x*2, temp), xyToPoint(-step_x*2, temp)));
+                canvas.draw(new Line2D.Double(xyToPoint(step_x, temp), xyToPoint(-step_x, temp)));
                 canvas.setColor(Color.BLACK);
                 canvas.setPaint(Color.BLACK);
+
             }
 
             i++;
 
         }
-        /*canvas.setColor(Color.RED);
-        canvas.setPaint(Color.RED);
-        canvas.draw(new Line2D.Double(xyToPoint(2, scaleY), xyToPoint(-2, scaleY)));
-        canvas.draw(new Line2D.Double(xyToPoint(scaleX , 4), xyToPoint(scaleX, -4)));
-*/
-
     }
 
     protected void paintAxis(Graphics2D canvas) {
@@ -232,6 +228,18 @@ public class GraphicsDisplay extends JPanel {
         canvas.setPaint(Color.BLACK);
         canvas.setFont(axisFont);
         FontRenderContext context = canvas.getFontRenderContext();
+        double x = graphicsData[0][0];
+        double X = graphicsData[graphicsData.length-1][0];
+        double y = graphicsData[0][1];;
+        double Y = graphicsData[graphicsData.length-1][1];
+        for(int j = 1; j <graphicsData.length-1; ++j)
+        {
+            if(graphicsData[j][1] < y) y = graphicsData[j][1];
+            if(graphicsData[j][0] < x) x = graphicsData[j][0];
+            if(graphicsData[j][1] > Y) Y = graphicsData[j][1];
+            if(graphicsData[j][0] > X) y = graphicsData[j][0];
+        }
+
 
         if (minX <= 0.0 && maxX >= 0.0) {
             canvas.draw(new Line2D.Double(xyToPoint(0, maxY), xyToPoint(0, minY)));
@@ -250,6 +258,12 @@ public class GraphicsDisplay extends JPanel {
             canvas.drawString("y", (float)labelPos.getX() + 10, (float)(labelPos.getY() - bounds.getY()));
 
 
+            Point2D.Double NumPos = xyToPoint(0, (Y+y)/2);
+            String str;
+            str = Double.toString((Y+y)/2);
+            canvas.drawString(str, (float)NumPos.getX() + 10, (float)(NumPos.getY() - bounds.getY()));
+
+
 
         }
 
@@ -266,6 +280,12 @@ public class GraphicsDisplay extends JPanel {
             Rectangle2D bounds = axisFont.getStringBounds("x", context);
             Point2D.Double labelPos = xyToPoint(maxX, 0);
             canvas.drawString("x", (float) (labelPos.getX() - bounds.getWidth() - 10), (float) (labelPos.getY() + bounds.getY()));
+
+            String str;
+            str = Double.toString((X+x)/2);
+
+            Point2D.Double NumPos = xyToPoint((x+X)/2, 0);
+            canvas.drawString(str, (float) (NumPos.getX() - bounds.getWidth() - 10), (float) (NumPos.getY() + bounds.getY()));
 
         }
 
